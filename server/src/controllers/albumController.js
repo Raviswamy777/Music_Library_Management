@@ -3,9 +3,9 @@ import Artist from '../models/Artist.js';
 
 async function getAlbums(req, res){
   try {
-    const { limit = 5, offset = 0, artistId, hidden } = req.query;
+    const { limit, offset , artist_id, hidden } = req.query;
     const filter = {};
-    if (artistId) filter.artist = artistId;
+    if (artist_id) filter.artist = artist_id;
     if (hidden !== undefined) filter.hidden = hidden === 'true';
 
     const albums = await Album.find(filter)
@@ -27,7 +27,7 @@ async function getAlbums(req, res){
 async function getAlbumById(req, res){
   try {
     const { id } = req.params;
-    const album = await Album.findById(id).populate('artist', 'name');
+    var album = await Album.findById(id).populate('artist', 'name');
 
     if (!album) {
       return res.status(404).json({
@@ -37,7 +37,7 @@ async function getAlbumById(req, res){
         error: null,
       });
     }
-
+    
     res.status(200).json({
       status: 200,
       data: album,
@@ -51,28 +51,28 @@ async function getAlbumById(req, res){
 
 async function createAlbum(req, res){
   try {
-    const { name, year, artistId, hidden } = req.body;
-
-    if (!name || !year || !artistId) {
+    const { name, year, artist_id, hidden } = req.body;
+    
+    if (!name || !year || !artist_id) {
       return res.status(400).json({
         status: 400,
         data: null,
-        message: 'Missing required fields',
+        message: 'Bad Request',
         error: null,
       });
     }
 
-    const artist = await Artist.findById(artistId);
+    const artist = await Artist.findById(artist_id);
     if (!artist) {
       return res.status(404).json({
         status: 404,
         data: null,
-        message: 'Artist not found',
+        message: "Resource Doesn't Exist",
         error: null,
       });
     }
 
-    const album = new Album({ name, year, artist: artistId, hidden });
+    const album = new Album({ name, year, artist: artist_id, hidden });
     await album.save();
 
     res.status(201).json({
@@ -88,12 +88,19 @@ async function createAlbum(req, res){
 
 async function updateAlbum(req, res){
   try {
-    const { id } = req.params;
-    const { name, year, artistId, hidden } = req.body;
-
+    const { album_id } = req.params;
+    const { name, year, artist_id, hidden } = req.body;
+    if(!album_id){
+      return res.status(400).json({
+        status: 400,
+        data: null,
+        message: 'Bad Request',
+        error: null,
+      });
+    }
     const album = await Album.findByIdAndUpdate(
-      id,
-      { name, year, artist: artistId, hidden },
+      album_id,
+      { name, year, artist: artist_id, hidden },
       { new: true, runValidators: true }
     );
 

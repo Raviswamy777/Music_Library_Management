@@ -8,6 +8,6 @@ favoriteRoutes.use(protect);
 
 favoriteRoutes.get('/', getFavorites);
 favoriteRoutes.post('/add-favorite', addFavorite);
-favoriteRoutes.delete('/remove-favorite/:id', removeFavorite);
+favoriteRoutes.delete('/remove-favorite/:favorite_id', removeFavorite);
 
 export default favoriteRoutes;

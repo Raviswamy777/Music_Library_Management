@@ -13,9 +13,9 @@ const trackRoutes = express.Router();
 trackRoutes.use(protect);
 
 trackRoutes.get('/', restrictTo('Admin', 'Editor', 'Viewer'), getTracks);
-trackRoutes.get('/:id', restrictTo('Admin', 'Editor', 'Viewer'), getTrackById);
+trackRoutes.get('/:track_id', restrictTo('Admin', 'Editor', 'Viewer'), getTrackById);
 trackRoutes.post('/add-track', restrictTo('Admin', 'Editor'), createTrack);
-trackRoutes.put('/:id', restrictTo('Admin', 'Editor'), updateTrack);
-trackRoutes.delete('/:id', restrictTo('Admin'), deleteTrack);
+trackRoutes.put('/:track_id', restrictTo('Admin', 'Editor'), updateTrack);
+trackRoutes.delete('/:track_id', restrictTo('Admin'), deleteTrack);
 
 export default trackRoutes;

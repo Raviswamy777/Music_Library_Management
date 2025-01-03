@@ -4,8 +4,8 @@ async function getArtists(req, res){
   try {
     const { limit = 5, offset = 0, grammy, hidden } = req.query;
     const filter = {};
-    if (grammy !== undefined) filter.grammy = grammy === 'true';
-    if (hidden !== undefined) filter.hidden = hidden === 'true';
+    if (grammy !== undefined) filter.grammy = grammy ;
+    if (hidden !== undefined) filter.hidden = hidden ;
 
     const artists = await Artist.find(filter).skip(Number(offset)).limit(Number(limit));
 
@@ -22,9 +22,12 @@ async function getArtists(req, res){
 
 async function getArtistById(req, res){
   try {
-    const { id } = req.params;
-    const artist = await Artist.findById(id);
+    const { artist_id } = req.params;
+    const artist = await Artist.findById(artist_id);
 
+    if(!artist_id){
+      res.status(400).json({ status: 400, data: null, message: 'Bad Request', error: null });
+    }
     if (!artist) {
       return res.status(404).json({
         status: 404,
@@ -99,7 +102,7 @@ async function updateArtist(req, res){
       });
     }
 
-    res.status(204).json({ status: 204, data: null, message: 'Artist updated successfully', error: null});
+    res.status(204).send();
   } catch (error) {
     res.status(500).json({ status: 500, data: null, message: 'Internal server error', error: error.message });
   }
@@ -107,9 +110,9 @@ async function updateArtist(req, res){
 
 async function deleteArtist(req, res){
   try {
-    const { id } = req.params;
+    const { artist_id } = req.params;
 
-    const artist = await Artist.findByIdAndDelete(id);
+    const artist = await Artist.findByIdAndDelete(artist_id);
 
     if (!artist) {
       return res.status(404).json({
@@ -122,7 +125,7 @@ async function deleteArtist(req, res){
 
     res.status(200).json({
       status: 200,
-      data: null,
+      data: {"artist_id":`${artist._id}`},
       message: `Artist: ${artist.name} deleted successfully`,
       error: null,
     });

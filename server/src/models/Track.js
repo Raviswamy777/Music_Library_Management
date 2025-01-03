@@ -11,4 +11,4 @@ const trackSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('Track', trackSchema);
+export default mongoose.model('Track', trackSchema, "tracks");

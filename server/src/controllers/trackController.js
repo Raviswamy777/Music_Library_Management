@@ -4,10 +4,10 @@ import Artist from '../models/Artist.js';
 
 async function getTracks(req, res){
   try {
-    const { limit = 5, offset = 0, artistId, albumId, hidden } = req.query;
+    const { limit = 5, offset = 0, artist_id, album_id, hidden } = req.query;
     const filter = {};
-    if (artistId) filter.artist = artistId;
-    if (albumId) filter.album = albumId;
+    if (artist_id) filter.artist = artist_id;
+    if (album_id) filter.album = album_id;
     if (hidden !== undefined) filter.hidden = hidden === 'true';
 
     const tracks = await Track.find(filter)
@@ -29,8 +29,8 @@ async function getTracks(req, res){
 
 async function getTrackById(req, res){
   try {
-    const { id } = req.params;
-    const track = await Track.findById(id).populate('artist', 'name').populate('album', 'name');
+    const { track_id } = req.params;
+    const track = await Track.findById(track_id).populate('artist', 'name').populate('album', 'name');
 
     if (!track) {
       return res.status(404).json({
@@ -54,9 +54,9 @@ async function getTrackById(req, res){
 
 async function createTrack(req, res){
   try {
-    const { name, duration, albumId, artistId, hidden } = req.body;
+    const { name, duration, album_id, artist_id, hidden } = req.body;
 
-    if (!name || !duration || !albumId || !artistId) {
+    if (!name || !duration || !album_id || !artist_id) {
       return res.status(400).json({
         status: 400,
         data: null,
@@ -65,8 +65,8 @@ async function createTrack(req, res){
       });
     }
 
-    const album = await Album.findById(albumId);
-    const artist = await Artist.findById(artistId);
+    const album = await Album.findById(album_id);
+    const artist = await Artist.findById(artist_id);
 
     if (!album || !artist) {
       return res.status(404).json({
@@ -77,7 +77,7 @@ async function createTrack(req, res){
       });
     }
 
-    const track = new Track({ name, duration, album: albumId, artist: artistId, hidden });
+    const track = new Track({ name, duration, album: album_id, artist: artist_id, hidden });
     await track.save();
 
     res.status(201).json({
@@ -93,12 +93,12 @@ async function createTrack(req, res){
 
 async function updateTrack(req, res){
   try {
-    const { id } = req.params;
-    const { name, duration, albumId, artistId, hidden } = req.body;
+    const { track_id } = req.params;
+    const { name, duration, album_id, artist_id, hidden } = req.body;
 
     const track = await Track.findByIdAndUpdate(
-      id,
-      { name, duration, album: albumId, artist: artistId, hidden },
+      track_id,
+      { name, duration, album: album_id, artist: artist_id, hidden },
       { new: true, runValidators: true }
     );
 
@@ -119,9 +119,9 @@ async function updateTrack(req, res){
 
 async function deleteTrack(req, res){
   try {
-    const { id } = req.params;
+    const { track_id } = req.params;
 
-    const track = await Track.findByIdAndDelete(id);
+    const track = await Track.findByIdAndDelete(track_id);
 
     if (!track) {
       return res.status(404).json({

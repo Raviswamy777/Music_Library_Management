@@ -4,6 +4,11 @@ import connectDB from "./config/db.js"
 import authRoutes from "./routes/authRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import artistRoutes from "./routes/artistRoutes.js"
+import trackRoutes from "./routes/trackRoutes.js"
+import albumRoutes from "./routes/albumRoutes.js"
+import favoriteRoutes from "./routes/favoriteRoutes.js"
+
+
 dotenv.config();
 connectDB();
 const PORT = process.env.PORT || 5000;
@@ -15,7 +20,9 @@ app.use(express.json());
 app.use('/api/v1', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/artists', artistRoutes);
-// Other routes will follow similarly...
+app.use('/api/v1/albums', albumRoutes);
+app.use('/api/v1/tracks', trackRoutes);
+app.use('/api/v1/favorites', favoriteRoutes);
 
 // Error Handler
 app.use((err, req, res, next) => {

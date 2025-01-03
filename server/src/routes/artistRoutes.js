@@ -13,9 +13,10 @@ const artistRoutes = express.Router();
 artistRoutes.use(protect);
 
 artistRoutes.get('/', restrictTo('Admin', 'Editor', 'Viewer'), getArtists);
-artistRoutes.get('/:id', restrictTo('Admin', 'Editor', 'Viewer'), getArtistById);
+artistRoutes.get('/:artist_id', restrictTo('Admin', 'Editor', 'Viewer'), getArtistById);
 artistRoutes.post('/add-artist', restrictTo('Admin', 'Editor'), createArtist);
 artistRoutes.put('/:artist_id', restrictTo('Admin', 'Editor'), updateArtist);
-artistRoutes.delete('/:id', restrictTo('Admin'), deleteArtist);
+artistRoutes.delete('/:artist_id', restrictTo('Admin'), deleteArtist);
 
 export default artistRoutes;
+
